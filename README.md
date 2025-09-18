@@ -68,8 +68,10 @@ Your-Folder-Name/
 └── pages/
     ├── 1_Page_one.py
     └── 2_Page_two.py
+    └── 3_Page_.py
 
 ```
+
 
 
 
