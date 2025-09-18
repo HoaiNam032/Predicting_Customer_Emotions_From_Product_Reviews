@@ -1,12 +1,18 @@
 # Predicting Customer Emotions From Product Reviews 💬
-*A Midterm Project for the Data Analytics Course — April 2025*
+*Tran Hoai Nam— September 2025*
 
 ---
 
-## 📖 Overview
-**Predicting Customer Emotions From Product Reviews** is a midterm project developed in April 2025 for the **Data Analytics** course.  
-The application aims to automatically classify customer emotions (**Satisfied / Unsatisfied**) based on their product reviews written in **Vietnamese**.  
-This helps businesses improve service quality and better understand customer feedback.
+## 📖 Overview  
+
+**Predicting Customer Emotions From Product Reviews** is an academic project completed in **September 2025**.  
+The system leverages **Natural Language Processing (NLP)** and **Machine Learning** to automatically interpret customer feedback in **Vietnamese product reviews**.  
+
+The main goal is to perform **binary sentiment classification** — distinguishing between **Satisfied** and **Unsatisfied**.  
+This project highlights how data-driven approaches can provide valuable insights into customer satisfaction.  
+
+By analyzing real-world review data from **Tiki.vn**, the application serves both as a **practical tool for businesses** and as a **hands-on case study for applying analytics techniques**.  
+
 
 ---
 
@@ -58,5 +64,6 @@ Your-Folder-Name/
 └── pages/
     ├── 1_Page_one.py
     └── 2_Page_two.py
+
 
 
