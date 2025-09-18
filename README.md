@@ -58,6 +58,7 @@ streamlit run app.py
 
 ```
 ---
+## 📂 Project Structure
 
 Your-Folder-Name/
 ├── app.py                      # Main entrypoint for Streamlit app
@@ -67,6 +68,7 @@ Your-Folder-Name/
 └── pages/
     ├── 1_Page_one.py
     └── 2_Page_two.py
+
 
 
 
