@@ -56,6 +56,10 @@ pip install -r requirements.txt
 # 4. Run the app
 streamlit run app.py
 
+```
+---
+
+## Project Structure
 Your-Folder-Name/
 ├── app.py                      # Main entrypoint for Streamlit app
 ├── utils/
@@ -64,6 +68,7 @@ Your-Folder-Name/
 └── pages/
     ├── 1_Page_one.py
     └── 2_Page_two.py
+
 
 
 
