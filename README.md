@@ -59,7 +59,7 @@ streamlit run app.py
 ```
 ---
 ## 📂 Project Structure
-
+```bash
 Your-Folder-Name/
 ├── app.py                      # Main entrypoint for Streamlit app
 ├── utils/
@@ -69,6 +69,7 @@ Your-Folder-Name/
     ├── 1_Page_one.py
     └── 2_Page_two.py
 
+```
 
 
 
