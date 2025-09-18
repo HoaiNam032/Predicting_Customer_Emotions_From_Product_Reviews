@@ -2,18 +2,23 @@ import streamlit as st
 import sys
 import joblib
 import utils.func
+import os
 
 st.set_page_config(
     page_title="Predicting Customer Emotions From Product Reviews",
     page_icon="💬",
     layout="wide"
 )
+
 #========== LOAD MÔ HÌNH ĐẦU TIÊN =======================
 df_balanced_2_label = utils.func.load_data()
+BASE_DIR = os.path.dirname(__file__)  # lấy đường dẫn thư mục hiện tại (predictApp)
 
+model_file = os.path.join(BASE_DIR, "lr_model_2label.pkl")
+vectorizer_file = os.path.join(BASE_DIR, "count_2label.pkl")
 # Nếu mô hình chưa được huấn luyện và lưu, ta sẽ huấn luyện và lưu mô hình
-model_file = 'lr_model_2label.pkl'
-vectorizer_file = 'count_2label.pkl'
+#model_file = 'lr_model_2label.pkl'
+#vectorizer_file = 'count_2label.pkl'
 
 # Nếu mô hình đã tồn tại, tải mô hình và vectorizer đã lưu
 try:
