@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import utils.func
 import matplotlib.pyplot as plt
+import requests
 
 # ===== Cấu hình giao diện =====
 st.set_page_config(page_title="Dự Đoán Cảm Xúc Theo File", page_icon="📄", layout="wide")
@@ -19,42 +20,62 @@ Sau đó, hệ thống sẽ:
 """)
 
 # ===== Cấu hình nguồn file mẫu =====
-# 1) Thử tìm file local (nếu bạn bundle sẵn)
 APP_DIR = Path(__file__).parent
 LOCAL_SAMPLE = APP_DIR / "data_test_file.csv"
 
-# 2) Nếu không có local, tải từ Google Sheets (link bạn đưa)
-# Link gốc: https://docs.google.com/spreadsheets/d/19WSRWUDcjhJjuVx-sE62icv1FWgNDVRLP5PsTpJpUko/edit?gid=1429131216#gid=1429131216
+# Link gốc:
+# https://docs.google.com/spreadsheets/d/19WSRWUDcjhJjuVx-sE62icv1FWgNDVRLP5PsTpJpUko/edit?gid=1429131216#gid=1429131216
 SHEET_ID = "19WSRWUDcjhJjuVx-sE62icv1FWgNDVRLP5PsTpJpUko"
 GID = "1429131216"
 GSHEETS_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={GID}"
 
-def load_sample_df():
-    # Ưu tiên local trước để không phụ thuộc mạng
+def load_sample_bytes():
+    # 1) Ưu tiên file local (nếu bundle sẵn trong repo)
     if LOCAL_SAMPLE.exists():
         try:
-            return pd.read_csv(LOCAL_SAMPLE)
+            return LOCAL_SAMPLE.read_bytes(), None
         except Exception as e:
-            st.warning(f"⚠️ Không đọc được file local data_test_file.csv: {e}")
-    # Fallback: đọc trực tiếp từ Google Sheets (public/read-only)
+            return None, f"Không đọc được file local: {e}"
+
+    # 2) Fallback: tải CSV từ Google Sheets (cần share Anyone with the link - Viewer)
     try:
-        return pd.read_csv(GSHEETS_CSV_URL)
+        resp = requests.get(GSHEETS_CSV_URL, timeout=15)
+        if resp.status_code == 200 and resp.content:
+            return resp.content, None
+        else:
+            return None, f"HTTP {resp.status_code} khi tải từ Google Sheets"
     except Exception as e:
-        st.warning(f"⚠️ Không tải được file mẫu từ Google Sheets: {e}")
-        return None
+        return None, f"Lỗi mạng khi tải Google Sheets: {e}"
 
 # ===== Nút tải file mẫu =====
-df_sample = load_sample_df()
-if df_sample is not None:
-    st.info("📥 Bạn có thể tải file mẫu để test ngay:")
+sample_bytes, sample_err = load_sample_bytes()
+
+st.divider()
+st.subheader("📥 File mẫu để test nhanh")
+
+if sample_bytes:
+    st.info("Bạn có thể tải file mẫu `.csv` để test ngay:")
     st.download_button(
         label="📄 Tải file mẫu data_test_file.csv",
-        data=df_sample.to_csv(index=False).encode("utf-8-sig"),
+        data=sample_bytes,
         file_name="data_test_file.csv",
         mime="text/csv",
+        use_container_width=True,
     )
 else:
-    st.warning("⚠️ Chưa có file mẫu khả dụng (local hoặc Google Sheets).")
+    st.warning("Chưa thể tạo file mẫu tự động (local/GSheets). Bạn vẫn có thể mở sheet gốc để tải thủ công.")
+    st.link_button(
+        "🔗 Mở Google Sheets (view only)",
+        url=f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/edit?gid={GID}",
+        use_container_width=True,
+    )
+
+# (Tùy chọn) Bật debug để xem lỗi chi tiết
+with st.expander("⚙️ Debug file mẫu"):
+    st.code(f"CSV export URL: {GSHEETS_CSV_URL}")
+    st.write("Error:", sample_err)
+    st.write("App dir:", str(APP_DIR))
+    st.write("Local sample exists:", LOCAL_SAMPLE.exists())
 
 # ===== Load model & vectorizer =====
 if os.path.exists("lr_model_2label.pkl") and os.path.exists("count_2label.pkl"):
