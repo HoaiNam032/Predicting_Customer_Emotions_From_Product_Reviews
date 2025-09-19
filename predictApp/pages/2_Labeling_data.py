@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import os
+from pathlib import Path
 import utils.func
 import matplotlib.pyplot as plt
 
@@ -17,19 +18,43 @@ Sau đó, hệ thống sẽ:
 - Trả về file `.csv` đã được gán nhãn để bạn tải về
 """)
 
-# ===== Thêm nút tải file mẫu =====
-sample_file_path = "data_test_file.csv"
-if os.path.exists(sample_file_path):
+# ===== Cấu hình nguồn file mẫu =====
+# 1) Thử tìm file local (nếu bạn bundle sẵn)
+APP_DIR = Path(__file__).parent
+LOCAL_SAMPLE = APP_DIR / "data_test_file.csv"
+
+# 2) Nếu không có local, tải từ Google Sheets (link bạn đưa)
+# Link gốc: https://docs.google.com/spreadsheets/d/19WSRWUDcjhJjuVx-sE62icv1FWgNDVRLP5PsTpJpUko/edit?gid=1429131216#gid=1429131216
+SHEET_ID = "19WSRWUDcjhJjuVx-sE62icv1FWgNDVRLP5PsTpJpUko"
+GID = "1429131216"
+GSHEETS_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={GID}"
+
+def load_sample_df():
+    # Ưu tiên local trước để không phụ thuộc mạng
+    if LOCAL_SAMPLE.exists():
+        try:
+            return pd.read_csv(LOCAL_SAMPLE)
+        except Exception as e:
+            st.warning(f"⚠️ Không đọc được file local data_test_file.csv: {e}")
+    # Fallback: đọc trực tiếp từ Google Sheets (public/read-only)
+    try:
+        return pd.read_csv(GSHEETS_CSV_URL)
+    except Exception as e:
+        st.warning(f"⚠️ Không tải được file mẫu từ Google Sheets: {e}")
+        return None
+
+# ===== Nút tải file mẫu =====
+df_sample = load_sample_df()
+if df_sample is not None:
     st.info("📥 Bạn có thể tải file mẫu để test ngay:")
-    with open(sample_file_path, "rb") as f:
-        st.download_button(
-            label="📄 Tải file mẫu data_test_file.csv",
-            data=f,
-            file_name="data_test_file.csv",
-            mime="text/csv"
-        )
+    st.download_button(
+        label="📄 Tải file mẫu data_test_file.csv",
+        data=df_sample.to_csv(index=False).encode("utf-8-sig"),
+        file_name="data_test_file.csv",
+        mime="text/csv",
+    )
 else:
-    st.warning("⚠️ Chưa có file mẫu data_test_file.csv trong thư mục.")
+    st.warning("⚠️ Chưa có file mẫu khả dụng (local hoặc Google Sheets).")
 
 # ===== Load model & vectorizer =====
 if os.path.exists("lr_model_2label.pkl") and os.path.exists("count_2label.pkl"):
@@ -51,6 +76,7 @@ if uploaded_file is not None:
         if uploaded_file.name.endswith(".csv"):
             df = pd.read_csv(uploaded_file)
         elif uploaded_file.name.endswith((".xlsx", ".xls")):
+            # chú ý: cần 'openpyxl' trong requirements nếu đọc .xlsx
             df = pd.read_excel(uploaded_file)
         elif uploaded_file.name.endswith(".txt"):
             df = pd.read_csv(uploaded_file, delimiter="\t")
@@ -91,9 +117,7 @@ if uploaded_file is not None:
 
             # ===== Biểu đồ trực quan =====
             st.subheader("📊 Phân tích cảm xúc khách hàng")
-
             sentiment_counts = df["sentiment"].value_counts()
-            colors = ["#A0C4FF", "#FFADAD"]  # pastel xanh dương và hồng cam
 
             # Tạo figure
             fig, ax = plt.subplots(figsize=(3.5, 3.5))
@@ -108,17 +132,14 @@ if uploaded_file is not None:
                 labels=labels,
                 autopct="%1.1f%%",
                 startangle=90,
-                colors=colors,
                 explode=explode,
                 textprops={"fontsize": 10}
             )
 
-            # Làm đẹp phần trăm
             for autotext in autotexts:
                 autotext.set_color("black")
                 autotext.set_fontweight("bold")
 
-            # Hiển thị trên Streamlit
             st.pyplot(fig)
 
     except Exception as e:
