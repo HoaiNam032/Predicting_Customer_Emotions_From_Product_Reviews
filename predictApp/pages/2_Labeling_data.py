@@ -17,6 +17,20 @@ Sau đó, hệ thống sẽ:
 - Trả về file `.csv` đã được gán nhãn để bạn tải về
 """)
 
+# ===== Thêm nút tải file mẫu =====
+sample_file_path = "data_test_file.csv"
+if os.path.exists(sample_file_path):
+    st.info("📥 Bạn có thể tải file mẫu để test ngay:")
+    with open(sample_file_path, "rb") as f:
+        st.download_button(
+            label="📄 Tải file mẫu data_test_file.csv",
+            data=f,
+            file_name="data_test_file.csv",
+            mime="text/csv"
+        )
+else:
+    st.warning("⚠️ Chưa có file mẫu data_test_file.csv trong thư mục.")
+
 # ===== Load model & vectorizer =====
 if os.path.exists("lr_model_2label.pkl") and os.path.exists("count_2label.pkl"):
     model = joblib.load("lr_model_2label.pkl")
@@ -106,7 +120,6 @@ if uploaded_file is not None:
 
             # Hiển thị trên Streamlit
             st.pyplot(fig)
-
 
     except Exception as e:
         st.error(f"❌ Lỗi khi xử lý file: {e}")
