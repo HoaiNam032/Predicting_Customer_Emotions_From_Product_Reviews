@@ -60,7 +60,6 @@ if sample_bytes:
         data=sample_bytes,
         file_name="data_test_file.csv",
         mime="text/csv",
-        use_container_width=True,
     )
 else:
     st.warning("Chưa thể tạo file mẫu tự động (local/GSheets). Bạn vẫn có thể mở sheet gốc để tải thủ công.")
@@ -69,13 +68,6 @@ else:
         url=f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/edit?gid={GID}",
         use_container_width=True,
     )
-
-# (Tùy chọn) Bật debug để xem lỗi chi tiết
-with st.expander("⚙️ Debug file mẫu"):
-    st.code(f"CSV export URL: {GSHEETS_CSV_URL}")
-    st.write("Error:", sample_err)
-    st.write("App dir:", str(APP_DIR))
-    st.write("Local sample exists:", LOCAL_SAMPLE.exists())
 
 # ===== Load model & vectorizer =====
 if os.path.exists("lr_model_2label.pkl") and os.path.exists("count_2label.pkl"):
