@@ -1,35 +1,75 @@
-# Predicting Customer Emotions From Product Reviews 💬
-*Tran Hoai Nam— September 2025*
+# 💬 Predicting Customer Emotions From Product Reviews
+*Tran Hoai Nam — September 2025*
 
 ---
 
 ## 📖 Overview  
 
-**Predicting Customer Emotions From Product Reviews** is an academic project completed in **September 2025**.  
-The system leverages **Natural Language Processing (NLP)** and **Machine Learning** to automatically interpret customer feedback in **Vietnamese product reviews**.  
+**Predicting Customer Emotions From Product Reviews** is an applied AI project developed in **Python 3.11.12**, focusing on **Natural Language Processing (NLP)** for Vietnamese text.  
+The system implements a complete **end-to-end Machine Learning pipeline**: data ingestion, preprocessing, model training, evaluation, deployment, and real-time prediction.  
 
-The main goal is to perform **binary sentiment classification** — distinguishing between **Satisfied** and **Unsatisfied**.  
-This project highlights how data-driven approaches can provide valuable insights into customer satisfaction.  
-
-By analyzing real-world review data from **Tiki.vn**, the application serves both as a **practical tool for businesses** and as a **hands-on case study for applying analytics techniques**.  
-
+The core task is **binary sentiment classification** — distinguishing between **Satisfied** vs. **Unsatisfied** customers.  
+By leveraging real-world product reviews from **Tiki.vn**, the project demonstrates how **Python-based AI systems** can transform unstructured text into actionable business insights.  
 
 ---
 
-## ✨ Features
-- 🎯 **Emotion Classification**: Binary classification - *Satisfied* or *Unsatisfied*.  
-- 📝 **Vietnamese NLP**: Analyze customer feedback in Vietnamese using NLP techniques.  
-- 📊 **Real-world Dataset**: Collected from product reviews on *Tiki.vn*.  
-- ⚡ **Interactive Web App**: Built with Streamlit for real-time prediction.  
+## ✨ Features  
+
+- 🎯 **Automated Sentiment Analysis**: Binary classification with optimized Logistic Regression (**93% accuracy**).  
+- 🧹 **Advanced Preprocessing Pipeline in Python**: Regex-based cleaning, Vietnamese word segmentation, stopword & banned-word filtering, text normalization.  
+- 🧠 **Machine Learning Engineering**: Model trained with Scikit-learn, vectorized with Bag-of-Words/CountVectorizer, persisted and reloaded using Joblib for reproducibility.  
+- ⚡ **Interactive AI Application**: Streamlit web interface enabling real-time single-input prediction and batch processing for CSV/Excel/TXT files.  
+- 📈 **Data Logging & Visualization**: Automatic storage of predictions (CSV) and dashboard-style charts (Matplotlib) for analyzing sentiment trends.  
 
 ---
 
-## 🛠 Technologies Used
-- 🐍 Python **3.11.12**  
-- 🤖 Logistic Regression for machine learning (**93% accuracy**)  
-- 📚 Pandas, Scikit-learn for data processing and modeling  
-- 🌐 Streamlit for building a user-friendly web interface  
-- 🔤 Under-the-hood NLP: Custom Vietnamese text preprocessing with normalization and word segmentation  
+## 🛠 Technologies Used  
+
+- 🐍 **Python 3.11.12** — OOP-based modular code, automation scripts, and pipeline reproducibility.  
+- 📚 **Pandas, NumPy** — scalable data manipulation and ETL operations.  
+- 🤖 **Scikit-learn** — Logistic Regression, evaluation metrics (Accuracy, F1-score, ROC-AUC).  
+- 💾 **Joblib** — model/vectorizer serialization & lifecycle management.  
+- 🌐 **Streamlit** — user-friendly web app for both real-time and batch predictions.  
+- 🔤 **NLP Preprocessing** — custom Vietnamese text pipeline (regex, normalization, tokenization, stopword removal).  
+- 📊 **Matplotlib, Seaborn** — sentiment distribution visualization and trend analysis.  
+
+---
+
+## 📊 Steps  
+
+### 1. Data Exploration & Design  
+- Analyze review structure: length, word frequency, label distribution.  
+- Implemented in Python using **pandas** for reading/writing data, string & list manipulation.  
+- Organized reusable code into utility modules (`utils.func`).  
+
+### 2. Text Preprocessing (NLP)  
+- Clean text with **regex**: normalization, lowercasing, removing special characters/emojis, diacritic normalization, tokenization.  
+- Filter out banned words using **set/list lookups** before feeding into the model.  
+- Implemented helper functions in Python such as `clean_data` and `translate_to_vietnamese`.  
+
+### 3. Feature Extraction  
+- Transformed text into feature matrices using **CountVectorizer / Bag-of-Words** in scikit-learn.  
+
+### 4. Model Building & Optimization  
+- Trained a **Logistic Regression** model with scikit-learn for binary classification (*Satisfied vs. Unsatisfied*).  
+- Achieved around **93% accuracy**, ensuring fast and stable inference by controlling seed and feature set consistency.  
+
+### 5. Model Lifecycle Management  
+- Saved/loaded model and vectorizer with **joblib**.  
+- If no model exists, the system **auto-trains and saves** it (cold-start).  
+- Used `os.path` to check files and `try/except` for exception handling, making the workflow robust.  
+
+### 6. AI Application Deployment (Inference UI)  
+- Built a multi-page app with **Streamlit**:  
+  - **Single prediction page**: input review, banned-word check, real-time prediction.  
+  - **Batch prediction page**: upload `.csv/.xlsx/.txt` file → clean → vectorize → predict in bulk → download results.  
+  - **History page**: manage `user_comments.csv`, view logs, reset data.  
+- The app was developed fully in Python with multi-page structure, state/file management, input validation, and I/O exception handling.  
+
+### 7. Monitoring & Visualization  
+- Generated result tables and pie charts to analyze sentiment distribution and trends.  
+- Implemented in Python with **matplotlib** and **pandas** (`value_counts`, `groupby`).  
+- Exported predictions to CSV with **UTF-8-SIG encoding** for external analysis.  
 
 ---
 
@@ -71,6 +111,7 @@ Your-Folder-Name/
     └── 3_Page_three.py
 
 ```
+
 
 
 
