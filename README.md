@@ -44,7 +44,7 @@ To run this project locally, follow these steps:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/nglhongphuong/Predicting-Consumer-Emotions-from-Product-Reviews.git
+git clone https://github.com/HoaiNam032/Predicting_Customer_Emotions_From_Product_Reviews.git
 
 # 2. Create a virtual environment (optional but recommended)
 python -m venv venv
@@ -71,6 +71,7 @@ Your-Folder-Name/
     └── 3_Page_three.py
 
 ```
+
 
 
 
